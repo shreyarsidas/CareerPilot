@@ -1,3 +1,3 @@
 # CareerPilot
-CAREERPILOT AI
+CAREERPILOT AI: 
 Google Maps for your Career.
