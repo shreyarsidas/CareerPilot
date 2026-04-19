@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerPilot — Google Maps for Your Career</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#004ac6;--primary-c:#2563eb;--primary-fixed:#dbe1ff;
+  --secondary:#9d4300;--secondary-c:#fd761a;--secondary-fixed:#ffdbca;
+  --tertiary:#006058;--tertiary-c:#16a34a;
+  --surface:#f8f9ff;--scl:#fff;--sclo:#eff4ff;
+  --sc:#e5eeff;--sch:#dce9ff;--schu:#d3e4fe;
+  --on-surface:#0b1c30;--osv:#434655;--outline:#737686;--ov:#c3c6d7;
+}
+body{font-family:'Inter',sans-serif;background:#111827;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:32px 16px}
+.phone{width:390px;max-width:100vw;background:var(--surface);border-radius:44px;overflow:hidden;box-shadow:0 60px 120px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.08);min-height:844px}
+.phone-inner{height:844px;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth}
+.phone-inner::-webkit-scrollbar{display:none}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;-webkit-font-smoothing:antialiased;font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+.ms-fill{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+
+.topnav{position:sticky;top:0;z-index:100;background:rgba(248,249,255,0.9);backdrop-filter:blur(20px);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Manrope',sans-serif;font-size:20px;font-weight:900;background:linear-gradient(135deg,#004ac6,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#2563eb}
+.bottomnav{position:sticky;bottom:0;background:rgba(248,249,255,0.97);backdrop-filter:blur(20px);display:flex;justify-content:space-around;padding:10px 0 18px;border-top:0.5px solid rgba(195,198,215,0.5);z-index:100}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:600;letter-spacing:0.04em;color:var(--outline);cursor:pointer;padding:4px 14px;border-radius:16px;transition:all 0.15s}
+.nav-item.active{color:var(--primary)}
+.nav-item .ms{font-size:22px}
+.nav-item.active .ms{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+
+.screen{display:none;flex-direction:column;padding-bottom:100px;animation:fadeUp 0.3s ease}
+.screen.active{display:flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+#screen-onboard{padding-bottom:0}
+.ob-step{display:none;flex-direction:column;min-height:844px;padding:36px 22px 90px;animation:fadeUp 0.3s ease}
+.ob-step.active{display:flex}
+.step-dots{display:flex;gap:6px;justify-content:center;margin-bottom:28px}
+.dot{width:6px;height:6px;border-radius:999px;background:var(--ov);transition:all 0.3s}
+.dot.active{width:20px;background:var(--primary)}
+
+.card{background:#fff;border-radius:24px;padding:22px;box-shadow:0 4px 20px rgba(11,28,48,0.05)}
+.card-lo{background:var(--sclo);border-radius:24px;padding:22px}
+.card-dark{background:var(--on-surface);border-radius:24px;padding:22px;position:relative;overflow:hidden}
+
+.hero{margin:14px 16px 0;border-radius:28px;background:linear-gradient(135deg,#004ac6 0%,#1e50d4 50%,#2563eb 100%);padding:26px 22px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;right:-20px;top:-14px;opacity:0.07;font-size:160px;color:#fff;line-height:1;font-family:'Material Symbols Outlined';font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 48}
+.hero h1{font-family:'Manrope',sans-serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:-0.02em;line-height:1.1;margin-bottom:8px;position:relative}
+.hero p{color:rgba(255,255,255,0.86);font-size:13px;line-height:1.6;font-weight:500;position:relative}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;align-items:center}
+.chip-ghost{background:rgba(255,255,255,0.16);backdrop-filter:blur(8px);color:#fff;padding:6px 13px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase}
+.chip-orange{background:#fd761a;color:#fff;padding:6px 13px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;cursor:pointer;border:none}
+
+.section-title{font-family:'Manrope',sans-serif;font-size:20px;font-weight:800;color:var(--on-surface);letter-spacing:-0.01em}
+.body-sm{font-size:13px;color:var(--osv);line-height:1.6}
+.label-sm{font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--outline);text-transform:uppercase}
+
+.badge{padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase}
+.badge-primary{background:var(--primary-fixed);color:var(--primary)}
+.badge-orange{background:var(--secondary-fixed);color:var(--secondary)}
+.badge-green{background:#dcfce7;color:#15803d}
+
+.btn-primary{background:linear-gradient(135deg,#004ac6,#2563eb);color:#fff;border:none;border-radius:12px;padding:14px 22px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;width:100%;transition:opacity 0.15s}
+.btn-primary:hover{opacity:0.88}
+.btn-secondary{background:transparent;color:var(--primary);border:1.5px solid var(--primary-fixed);border-radius:12px;padding:12px 22px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;width:100%}
+
+.progress-bar{height:5px;border-radius:999px;background:var(--sch);overflow:hidden}
+.progress-fill{height:100%;border-radius:999px;transition:width 0.4s ease}
+.fill-blue{background:linear-gradient(90deg,#004ac6,#2563eb)}
+.fill-orange{background:linear-gradient(90deg,#9d4300,#fd761a)}
+.fill-green{background:linear-gradient(90deg,#006058,#16a34a)}
+.fill-red{background:linear-gradient(90deg,#dc2626,#ef4444)}
+
+.chip-select{padding:10px 16px;border-radius:999px;background:var(--sclo);font-size:13px;font-weight:600;color:var(--osv);cursor:pointer;border:2px solid transparent;transition:all 0.18s;display:inline-flex;align-items:center;gap:6px}
+.chip-select.sel{border-color:var(--primary);background:var(--primary-fixed);color:var(--primary)}
+
+/* Subject picker */
+.subj-pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.subj-pick-card{background:var(--sclo);border-radius:16px;padding:14px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;border:2px solid transparent;transition:all 0.18s;user-select:none}
+.subj-pick-card.sel{border-color:var(--primary);background:var(--primary-fixed)}
+.subj-pick-card .sicon{font-size:22px;flex-shrink:0}
+.subj-pick-card .sname{font-weight:700;font-size:13px;color:var(--on-surface);flex:1}
+.subj-pick-card .chk{width:20px;height:20px;border-radius:50%;border:2px solid var(--ov);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.18s}
+.subj-pick-card.sel .chk{background:var(--primary);border-color:var(--primary)}
+
+/* Marks input */
+.marks-list{display:flex;flex-direction:column;gap:10px;margin:10px 0}
+.mark-row{background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 2px 10px rgba(11,28,48,0.04)}
+.mark-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.mark-row-top .sn{font-weight:700;font-size:14px;color:var(--on-surface)}
+.minput-wrap{display:flex;align-items:center;gap:8px}
+.minput{width:62px;padding:7px 8px;border-radius:10px;border:2px solid var(--sch);background:var(--sclo);font-family:'Manrope',sans-serif;font-size:18px;font-weight:800;color:var(--primary);text-align:center;outline:none;transition:border 0.2s}
+.minput:focus{border-color:var(--primary);background:#fff}
+.mslider{flex:1;accent-color:var(--primary);cursor:pointer}
+
+/* Career cards */
+.career-card{background:#fff;border-radius:22px;padding:18px;box-shadow:0 4px 20px rgba(11,28,48,0.06);margin-bottom:12px;position:relative;overflow:hidden}
+.career-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#004ac6,#2563eb)}
+.career-card.backup::before{background:linear-gradient(90deg,#9d4300,#fd761a)}
+
+/* Timeline */
+.path-timeline{display:flex;flex-direction:column}
+.path-step{display:flex;align-items:flex-start;gap:14px;padding:12px 0}
+.path-step:not(:last-child){border-bottom:0.5px solid var(--sclo)}
+.pdot-col{display:flex;flex-direction:column;align-items:center;padding-top:2px}
+.pdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.pline{width:2px;flex:1;min-height:24px;margin-top:4px}
+
+/* Salary bars */
+.sal-row{display:flex;align-items:center;gap:10px;margin:7px 0}
+.sal-label{font-size:11px;font-weight:600;color:var(--outline);min-width:70px;text-transform:uppercase;letter-spacing:0.04em}
+.sal-track{flex:1;height:28px;background:var(--sch);border-radius:8px;overflow:hidden}
+.sal-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding-left:10px;transition:width 0.5s ease}
+
+/* Forecast table */
+.ftable{width:100%;border-collapse:collapse}
+.ftable th{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--outline);padding:8px 0;text-align:left}
+.ftable td{padding:10px 0;border-top:0.5px solid var(--sclo);font-size:13px;vertical-align:middle}
+.star-row{display:flex;gap:1px}
+.star{color:#dce9ff;font-size:14px}
+.star.on{color:#fd761a}
+
+/* Chat */
+.chat-area{display:flex;flex-direction:column;gap:12px;padding:16px}
+.msg{max-width:84%;padding:12px 16px;border-radius:20px;font-size:14px;line-height:1.6}
+.msg-ai{align-self:flex-start;background:var(--sclo);color:var(--on-surface);border-bottom-left-radius:6px}
+.msg-user{align-self:flex-end;background:linear-gradient(135deg,#004ac6,#2563eb);color:#fff;border-bottom-right-radius:6px;font-weight:500}
+.msg-typing{display:flex;gap:5px;align-items:center;padding:14px 18px}
+.tdot{width:7px;height:7px;border-radius:50%;background:var(--outline);animation:bounce 1.2s infinite}
+.tdot:nth-child(2){animation-delay:0.2s}
+.tdot:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.chat-input-row{position:fixed;bottom:68px;left:50%;transform:translateX(-50%);width:390px;max-width:100vw;background:var(--surface);padding:10px 16px;display:flex;gap:10px;align-items:center;border-top:0.5px solid rgba(195,198,215,0.5);z-index:50}
+.chat-input{flex:1;background:var(--sclo);border:none;border-radius:999px;padding:11px 18px;font-size:14px;font-family:'Inter',sans-serif;color:var(--on-surface);outline:none}
+.chat-input:focus{background:#fff;box-shadow:0 0 0 2px var(--primary) inset}
+.send-btn{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#004ac6,#2563eb);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.quick-chips{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 8px}
+.qchip{padding:8px 14px;border-radius:999px;background:var(--sclo);font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;border:1.5px solid var(--primary-fixed);white-space:nowrap}
+.qchip:hover{background:var(--primary-fixed)}
+
+@keyframes slideIn{from{opacity:0;transform:scale(0.93) translateY(14px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.slide-in{animation:slideIn 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="phone-inner" id="phone-inner">
+
+<!-- ═══════════════════ ONBOARDING ═══════════════════ -->
+<div id="screen-onboard" class="screen active">
+
+  <!-- STEP 1: Welcome -->
+  <div class="ob-step active" id="step-1">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+      <div style="width:70px;height:70px;background:linear-gradient(135deg,#004ac6,#2563eb);border-radius:22px;display:flex;align-items:center;justify-content:center;margin-bottom:26px">
+        <span class="ms ms-fill" style="color:#fff;font-size:36px">explore</span>
+      </div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#fd761a;margin-bottom:10px">CAREERPILOT AI</div>
+      <h1 style="font-family:'Manrope',sans-serif;font-size:34px;font-weight:900;letter-spacing:-0.02em;color:#0b1c30;line-height:1.1;margin-bottom:14px">Google Maps<br/>for your<br/><span style="background:linear-gradient(135deg,#004ac6,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Career.</span></h1>
+      <p style="font-size:14px;color:#434655;line-height:1.7">Career suggestions that react to <strong>your actual marks</strong> — not generic advice for everyone.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:26px">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#eff4ff;border-radius:16px">
+          <span class="ms ms-fill" style="color:#004ac6;font-size:22px">checklist</span>
+          <div><div style="font-weight:700;font-size:13px;color:#0b1c30">Select your subjects</div><div style="font-size:12px;color:#737686">Pick exactly what you study</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#eff4ff;border-radius:16px">
+          <span class="ms ms-fill" style="color:#fd761a;font-size:22px">edit_note</span>
+          <div><div style="font-weight:700;font-size:13px;color:#0b1c30">Enter your real marks</div><div style="font-size:12px;color:#737686">Type the number, drag the slider</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#eff4ff;border-radius:16px">
+          <span class="ms ms-fill" style="color:#006058;font-size:22px">auto_awesome</span>
+          <div><div style="font-weight:700;font-size:13px;color:#0b1c30">Get personalised careers + salaries</div><div style="font-size:12px;color:#737686">Changes every time your marks change</div></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="goStep(2)" style="margin-top:24px">Get Started →</button>
+  </div>
+
+  <!-- STEP 2: Pick Subjects -->
+  <div class="ob-step" id="step-2">
+    <div class="step-dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#fd761a;margin-bottom:8px">STEP 1 OF 3</div>
+    <h2 style="font-family:'Manrope',sans-serif;font-size:24px;font-weight:900;letter-spacing:-0.01em;color:#0b1c30;margin-bottom:4px">Select Your Subjects</h2>
+    <p class="body-sm" style="margin-bottom:2px">Choose your stream, then tick the subjects you study.</p>
+
+    <div style="margin:12px 0 6px;font-weight:700;font-size:13px;color:#0b1c30">Your stream:</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px" id="stream-row">
+      <div class="chip-select sel" onclick="pickStream(this,'PCM')">📐 PCM</div>
+      <div class="chip-select" onclick="pickStream(this,'PCB')">🧬 PCB</div>
+      <div class="chip-select" onclick="pickStream(this,'Commerce')">📊 Commerce</div>
+      <div class="chip-select" onclick="pickStream(this,'Arts')">🎨 Arts</div>
+    </div>
+
+    <div style="font-weight:700;font-size:13px;color:#0b1c30;margin-bottom:2px">Your subjects <span style="color:#737686;font-weight:500">(select all you study)</span>:</div>
+    <div class="subj-pick-grid" id="subj-grid"></div>
+    <div id="subj-err" style="display:none;color:#dc2626;font-size:12px;font-weight:600;margin-bottom:8px">⚠ Select at least 2 subjects.</div>
+
+    <div style="display:flex;gap:10px">
+      <button class="btn-secondary" style="flex:0.4" onclick="goStep(1)">← Back</button>
+      <button class="btn-primary" style="flex:1" onclick="proceedToMarks()">Next: Enter Marks →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Enter Marks -->
+  <div class="ob-step" id="step-3">
+    <div class="step-dots"><div class="dot"></div><div class="dot active"></div><div class="dot"></div></div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#fd761a;margin-bottom:8px">STEP 2 OF 3</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <h2 style="font-family:'Manrope',sans-serif;font-size:24px;font-weight:900;letter-spacing:-0.01em;color:#0b1c30">Enter Your Marks</h2>
+      <button onclick="resetMarks()" style="background:var(--secondary-fixed);color:var(--secondary);border:none;border-radius:10px;padding:7px 11px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;flex-shrink:0">
+        <span class="ms" style="font-size:14px;color:#9d4300">restart_alt</span>Reset
+      </button>
+    </div>
+    <p class="body-sm" style="margin-bottom:4px">Type your score or drag — out of 100.</p>
+
+    <div id="avg-banner" style="margin:10px 0;background:linear-gradient(135deg,#004ac6,#2563eb);border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;transition:transform 0.2s">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="ms ms-fill" style="color:rgba(255,255,255,0.8);font-size:18px">bar_chart</span>
+        <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.85)">Average Score</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:4px">
+        <span id="avg-score" style="font-family:'Manrope',sans-serif;font-size:24px;font-weight:900;color:#fff">–</span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.7);font-weight:600">/ 100</span>
+        <span id="avg-grade" style="margin-left:6px;background:rgba(255,255,255,0.2);padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;color:#fff"></span>
+      </div>
+    </div>
+
+    <div class="marks-list" id="marks-list"></div>
+
+    <div style="display:flex;gap:10px;margin-top:6px">
+      <button class="btn-secondary" style="flex:0.4" onclick="goStep(2)">← Back</button>
+      <button class="btn-primary" style="flex:1" onclick="goStep(4)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Personality + City + Generate -->
+  <div class="ob-step" id="step-4">
+    <div class="step-dots"><div class="dot"></div><div class="dot"></div><div class="dot active"></div></div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#fd761a;margin-bottom:8px">STEP 3 OF 3</div>
+    <h2 style="font-family:'Manrope',sans-serif;font-size:24px;font-weight:900;letter-spacing:-0.01em;color:#0b1c30;margin-bottom:4px">About You</h2>
+    <p class="body-sm" style="margin-bottom:14px">Quick picks to personalise your results.</p>
+
+    <div style="font-weight:700;font-size:13px;color:#0b1c30;margin-bottom:8px">Personality traits:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+      <div class="chip-select" onclick="this.classList.toggle('sel')">🧠 Logical</div>
+      <div class="chip-select sel" onclick="this.classList.toggle('sel')">🚀 Ambitious</div>
+      <div class="chip-select sel" onclick="this.classList.toggle('sel')">💡 Problem Solver</div>
+      <div class="chip-select" onclick="this.classList.toggle('sel')">🎨 Creative</div>
+      <div class="chip-select" onclick="this.classList.toggle('sel')">🗣️ People Person</div>
+      <div class="chip-select" onclick="this.classList.toggle('sel')">🦁 Leader</div>
+    </div>
+
+    <div style="font-weight:700;font-size:13px;color:#0b1c30;margin-bottom:8px">Career priority:</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px" id="priority-row">
+      <div class="chip-select sel" style="border-radius:14px" onclick="pickOne(this,'priority-row')">💰 High salary</div>
+      <div class="chip-select" style="border-radius:14px" onclick="pickOne(this,'priority-row')">🌍 Work-life balance</div>
+      <div class="chip-select" style="border-radius:14px" onclick="pickOne(this,'priority-row')">🚀 Fast growth</div>
+      <div class="chip-select" style="border-radius:14px" onclick="pickOne(this,'priority-row')">🎯 Passion & purpose</div>
+    </div>
+
+    <div style="font-weight:700;font-size:13px;color:#0b1c30;margin-bottom:8px">Your city:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px" id="city-row">
+      <div class="chip-select sel" onclick="pickOne(this,'city-row')">🌆 Chennai</div>
+      <div class="chip-select" onclick="pickOne(this,'city-row')">🏙️ Bengaluru</div>
+      <div class="chip-select" onclick="pickOne(this,'city-row')">🌇 Mumbai</div>
+      <div class="chip-select" onclick="pickOne(this,'city-row')">🏛️ Delhi/NCR</div>
+      <div class="chip-select" onclick="pickOne(this,'city-row')">💻 Hyderabad</div>
+      <div class="chip-select" onclick="pickOne(this,'city-row')">🏔️ Pune</div>
+    </div>
+
+    <div id="gen-state" style="display:none;text-align:center;padding:16px 0">
+      <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#004ac6,#2563eb);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;animation:pulse 1.5s infinite">
+        <span class="ms ms-fill" style="color:#fff;font-size:30px">psychology</span>
+      </div>
+      <div style="font-family:'Manrope',sans-serif;font-size:17px;font-weight:800;color:#0b1c30;margin-bottom:6px" id="gen-msg">Analyzing your marks…</div>
+      <div class="body-sm">Building your personalised career map</div>
+      <div style="margin-top:18px;height:6px;background:#eff4ff;border-radius:999px;overflow:hidden">
+        <div id="gen-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#004ac6,#fd761a);border-radius:999px;transition:width 0.3s"></div>
+      </div>
+    </div>
+
+    <div id="gen-btn">
+      <div style="display:flex;gap:10px">
+        <button class="btn-secondary" style="flex:0.4" onclick="goStep(3)">← Back</button>
+        <button class="btn-primary" style="flex:1" onclick="generatePaths()">🔮 Generate My Career Map</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /screen-onboard -->
+
+<!-- ═══════════════════ DASHBOARD ═══════════════════ -->
+<div id="screen-dashboard" class="screen">
+  <div class="topnav">
+    <div class="logo">CareerPilot</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="icon-btn"><span class="ms">notifications</span></button>
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#004ac6,#2563eb);display:flex;align-items:center;justify-content:center;font-size:14px">🎓</div>
+    </div>
+  </div>
+  <div class="hero">
+    <div class="hero-bg">explore</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-bottom:5px;font-weight:600">Good afternoon, Sid 👋</div>
+    <h1 id="d-hero-title">Career Map Ready</h1>
+    <p id="d-hero-sub"></p>
+    <div class="hero-chips">
+      <div class="chip-ghost" id="d-match-chip">–</div>
+      <button class="chip-orange" onclick="switchTab('paths')"><span class="ms ms-fill" style="font-size:14px;color:#fff">arrow_forward</span>View Paths</button>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;margin:14px 16px 0">
+    <div style="flex:1;background:#fff;border-radius:20px;padding:14px;box-shadow:0 4px 16px rgba(11,28,48,0.05)">
+      <div id="d-entry-sal" style="font-family:'Manrope',sans-serif;font-size:19px;font-weight:900;color:#004ac6">–</div>
+      <div style="font-size:11px;font-weight:600;color:#737686;margin-top:2px">Entry Salary</div>
+    </div>
+    <div style="flex:1;background:#fff;border-radius:20px;padding:14px;box-shadow:0 4px 16px rgba(11,28,48,0.05)">
+      <div id="d-backup-count" style="font-family:'Manrope',sans-serif;font-size:19px;font-weight:900;color:#fd761a">–</div>
+      <div style="font-size:11px;font-weight:600;color:#737686;margin-top:2px">Backup Plans</div>
+    </div>
+    <div style="flex:1;background:#fff;border-radius:20px;padding:14px;box-shadow:0 4px 16px rgba(11,28,48,0.05)">
+      <div id="d-avg" style="font-family:'Manrope',sans-serif;font-size:19px;font-weight:900;color:#006058">–</div>
+      <div style="font-size:11px;font-weight:600;color:#737686;margin-top:2px">Your Avg</div>
+    </div>
+  </div>
+  <div style="padding:18px 16px 8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="section-title" style="font-size:18px">Top Match</div>
+      <div class="label-sm" style="color:var(--primary)">AI PICK</div>
+    </div>
+    <div id="d-top-card" class="career-card slide-in" onclick="switchTab('paths')" style="cursor:pointer"></div>
+  </div>
+  <div style="padding:0 16px 8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="section-title" style="font-size:18px">Skill Snapshot</div>
+      <div id="d-avg-badge" style="background:var(--primary-fixed);color:var(--primary);padding:5px 12px;border-radius:999px;font-size:12px;font-weight:800;font-family:'Manrope',sans-serif">Avg –</div>
+    </div>
+    <div class="card-lo" id="d-skill-bars"></div>
+  </div>
+  <div style="padding:0 16px 16px">
+    <div class="card-dark" style="padding:20px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px">MENTOR QUICK TIP</div>
+      <p id="d-tip" style="font-size:14px;color:rgba(255,255,255,0.88);line-height:1.6;font-style:italic;margin-bottom:16px"></p>
+      <button class="chip-orange" onclick="switchTab('mentor')">TALK TO AI MENTOR →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PATHS ═══════════════════ -->
+<div id="screen-paths" class="screen">
+  <div class="topnav">
+    <div class="logo">Career Paths</div>
+    <div id="p-stream-badge" style="background:var(--sclo);padding:6px 12px;border-radius:999px;font-size:11px;font-weight:700;color:#004ac6"></div>
+  </div>
+  <div class="hero">
+    <div class="hero-bg">route</div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:6px">YOUR #1 CAREER PATH</div>
+    <h1 id="p-title" style="font-size:24px">–</h1>
+    <p id="p-desc"></p>
+    <div class="hero-chips">
+      <div class="chip-ghost" id="p-match"></div>
+      <div class="chip-ghost" id="p-sal-range"></div>
+    </div>
+  </div>
+  <div style="padding:18px 16px 8px">
+    <div class="section-title" style="font-size:18px;margin-bottom:4px">Salary Trajectory</div>
+    <p class="body-sm" style="margin-bottom:12px">Projected India earnings — based on your <strong id="p-avg-label">–</strong> avg score</p>
+    <div class="card-lo" id="p-salary-chart" style="padding:18px 16px"></div>
+  </div>
+  <div style="padding:0 16px 8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div class="section-title" style="font-size:18px">The Real-Life Path</div>
+      <div class="label-sm">ROADMAP</div>
+    </div>
+    <p class="body-sm" style="margin-bottom:12px">Step-by-step journey from today to senior level.</p>
+    <div class="card" id="p-roadmap"></div>
+  </div>
+  <div style="padding:0 16px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0">
+      <div class="section-title" style="font-size:18px">Backup Plans</div>
+      <div class="label-sm" style="color:#fd761a">STRATEGIC</div>
+    </div>
+    <div id="p-backups"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ BACKUPS ═══════════════════ -->
+<div id="screen-backups" class="screen">
+  <div class="topnav">
+    <div class="logo">Strategic Backups</div>
+    <div style="font-size:11px;font-weight:600;color:#737686">Live Market Data</div>
+  </div>
+  <div class="hero">
+    <div class="hero-bg">fork_right</div>
+    <h1>Strategic<br/>Backups</h1>
+    <p id="b-hero-sub">Alternative routes from your mark profile.</p>
+    <div class="hero-chips">
+      <div class="chip-ghost" id="b-primary-chip">PRIMARY: –</div>
+      <button class="chip-orange">BACKUP ACTIVE</button>
+    </div>
+  </div>
+  <div style="padding:18px 16px 8px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+      <div class="section-title" style="font-size:20px">The Pivot<br/>Analysis</div>
+      <div class="label-sm">LIVE MARKET<br/>DATA</div>
+    </div>
+    <div id="b-pivot"></div>
+  </div>
+  <div style="padding:0 16px 8px">
+    <div class="card-lo" style="display:flex;gap:14px;align-items:flex-start">
+      <span class="ms ms-fill" style="color:#004ac6;font-size:30px;flex-shrink:0">auto_awesome</span>
+      <div>
+        <div style="font-family:'Manrope',sans-serif;font-size:17px;font-weight:800;color:#0b1c30;margin-bottom:6px">Growth is Guaranteed</div>
+        <p id="b-growth-text" class="body-sm"></p>
+      </div>
+    </div>
+  </div>
+  <div style="padding:0 16px 8px">
+    <div class="card-dark">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px">MENTOR QUICK TIP</div>
+      <p id="b-mentor-tip" style="font-size:14px;color:rgba(255,255,255,0.88);line-height:1.6;font-style:italic;margin-bottom:16px"></p>
+      <button class="chip-orange" onclick="switchTab('mentor')">TALK TO MENTOR →</button>
+    </div>
+  </div>
+  <div style="padding:0 16px 16px">
+    <div class="section-title" style="font-size:18px;margin:12px 0 4px">5-Year Growth Forecast</div>
+    <p class="body-sm" style="margin-bottom:14px">India market · based on your profile</p>
+    <div class="card"><table class="ftable" id="b-table"></table></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MENTOR CHAT ═══════════════════ -->
+<div id="screen-mentor" class="screen" style="padding-bottom:150px">
+  <div class="topnav">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#004ac6,#2563eb);display:flex;align-items:center;justify-content:center">
+        <span class="ms ms-fill" style="color:#fff;font-size:20px">smart_toy</span>
+      </div>
+      <div>
+        <div style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:800;color:#0b1c30">AI Career Mentor</div>
+        <div style="font-size:11px;color:#16a34a;font-weight:600">● Online · India Market Expert</div>
+      </div>
+    </div>
+    <button class="icon-btn" onclick="clearChat()"><span class="ms">refresh</span></button>
+  </div>
+  <div id="chat-messages" class="chat-area"></div>
+  <div class="quick-chips" id="quick-chips">
+    <div class="qchip" onclick="sendQuick('What should I study now to improve my career prospects?')">📚 What to study</div>
+    <div class="qchip" onclick="sendQuick('Which colleges in India are best for my stream and marks?')">🏛️ Best colleges</div>
+    <div class="qchip" onclick="sendQuick('What salary can I realistically expect in 5 years?')">💰 Salary in 5 yrs</div>
+    <div class="qchip" onclick="sendQuick('What backup options exist if my top career path does not work out?')">🛡️ Backup options</div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chat-input" placeholder="Ask about careers, exams, salaries…" onkeydown="if(event.key==='Enter')sendMsg()"/>
+    <button class="send-btn" onclick="sendMsg()"><span class="ms" style="font-size:20px">send</span></button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottomnav" id="bottom-nav" style="display:none">
+  <div class="nav-item" onclick="switchTab('dashboard')" id="nav-dashboard"><span class="ms">dashboard</span><span>Dashboard</span></div>
+  <div class="nav-item" onclick="switchTab('paths')" id="nav-paths"><span class="ms">route</span><span>Paths</span></div>
+  <div class="nav-item" onclick="switchTab('backups')" id="nav-backups"><span class="ms">fork_right</span><span>Backups</span></div>
+  <div class="nav-item" onclick="switchTab('mentor')" id="nav-mentor"><span class="ms">smart_toy</span><span>Mentor</span></div>
+</div>
+
+</div></div>
+
+<!-- ═══════════════════ JAVASCRIPT ENGINE ═══════════════════ -->
+<script>
+'use strict';
+
+// ─── SUBJECT CATALOGUE ───────────────────────────────────────
+const ALL_SUBJECTS = [
+  { id:'math',     name:'Mathematics',      icon:'📐', streams:['PCM','Commerce'] },
+  { id:'physics',  name:'Physics',          icon:'⚡', streams:['PCM','PCB'] },
+  { id:'chem',     name:'Chemistry',        icon:'🧪', streams:['PCM','PCB'] },
+  { id:'bio',      name:'Biology',          icon:'🧬', streams:['PCB'] },
+  { id:'cs',       name:'Computer Science', icon:'💻', streams:['PCM'] },
+  { id:'english',  name:'English',          icon:'📖', streams:['PCM','PCB','Commerce','Arts'] },
+  { id:'economics',name:'Economics',        icon:'📊', streams:['Commerce','Arts'] },
+  { id:'accounts', name:'Accountancy',      icon:'🧾', streams:['Commerce'] },
+  { id:'bst',      name:'Business Studies', icon:'💼', streams:['Commerce'] },
+  { id:'history',  name:'History',          icon:'🏛️', streams:['Arts'] },
+  { id:'geography',name:'Geography',        icon:'🌍', streams:['Arts'] },
+  { id:'polsci',   name:'Political Science',icon:'⚖️', streams:['Arts'] },
+  { id:'art',      name:'Fine Arts',        icon:'🎨', streams:['Arts'] },
+  { id:'psych',    name:'Psychology',       icon:'🧠', streams:['Arts','PCB'] },
+];
+
+// ─── CAREER DATABASE ─────────────────────────────────────────
+// weights: which subjects matter + how much (must sum to 1.0)
+// salaryFn(avg): returns {entry, mid, senior, lead} in ₹L based on user's average
+const CAREERS = [
+  {
+    id:'data_scientist', title:'Data Scientist', icon:'data_object', emoji:'📊', category:'Technology',
+    description:'Turn data into decisions using ML & AI. Huge demand across Chennai, Bengaluru, Hyderabad.',
+    weights:{ math:0.35, cs:0.35, physics:0.1, english:0.1, economics:0.1 },
+    demand:'Very High', stability:'Very High', growth:'+28%', difficulty:4,
+    colleges:['IIT Madras','NIT Trichy','Anna University','VIT Vellore'],
+    roadmap:[
+      { stage:'Class 12 → Now', color:'#16a34a', text:'Score 80%+ in PCM. Target JEE Main/TNEA/CUET for NIT/IIT/Anna University CS or DS programme.' },
+      { stage:'Yrs 1–2 · Undergrad', color:'#004ac6', text:'B.Tech CS/Data Science. Learn Python, SQL, Statistics. Start on Kaggle. Build 2 GitHub projects.' },
+      { stage:'Yrs 3–4 · Specialise', color:'#004ac6', text:'Andrew Ng ML Specialization (Coursera). Intern at Zoho/Freshworks/TCS. Aim for CGPA 8+.' },
+      { stage:'Yr 5 · Entry Role', color:'#fd761a', text:'Junior Data Scientist at Chennai/Bengaluru tech firms. Zoho, Freshworks, Capgemini, IBM GBS hire fresh grads.' },
+      { stage:'Yrs 7–10 · Senior', color:'#006058', text:'Senior/Lead Data Scientist. MBA from IIM accelerates to management. Target ₹30–45L CTC.' },
+    ],
+    salaryFn(avg){ const m=avg/100; return { entry:+(6+m*8).toFixed(1), mid:+(14+m*10).toFixed(1), senior:+(24+m*14).toFixed(1), lead:+(38+m*20).toFixed(1) }; },
+  },
+  {
+    id:'software_engineer', title:'Software Engineer', icon:'code', emoji:'💻', category:'Technology',
+    description:'Build products used by millions. India\'s largest tech employer with massive entry-level hiring.',
+    weights:{ cs:0.5, math:0.3, physics:0.1, english:0.1 },
+    demand:'Very High', stability:'High', growth:'+24%', difficulty:4,
+    colleges:['IITs','NITs','BITS Pilani','VIT','SRM'],
+    roadmap:[
+      { stage:'Class 12 → Now', color:'#16a34a', text:'Build DSA basics in Python/C++. Strong CS + Math scores for JEE/TNEA. Aim for a reputed CS programme.' },
+      { stage:'Yrs 1–2 · Undergrad', color:'#004ac6', text:'B.Tech CS. Master Data Structures & Algorithms (LeetCode daily). Contribute to open-source.' },
+      { stage:'Yrs 3–4 · Specialise', color:'#004ac6', text:'Choose backend/frontend/full-stack. Intern at a product company. Crack SDE internship at tier-1.' },
+      { stage:'Yr 5 · Entry Role', color:'#fd761a', text:'SDE-1 at TCS, Infosys, Zoho, Freshworks, or FAANG prep route. Chennai has 200+ product companies.' },
+      { stage:'Yrs 6–10 · Senior', color:'#006058', text:'SDE-2/3 or Staff Engineer. FAANG lateral transfers possible. Remote roles paying USD salaries available.' },
+    ],
+    salaryFn(avg){ const m=avg/100; return { entry:+(5+m*9).toFixed(1), mid:+(12+m*12).toFixed(1), senior:+(22+m*18).toFixed(1), lead:+(35+m*25).toFixed(1) }; },
+  },
+  {
+    id:'doctor', title:'Medical Doctor (MBBS)', icon:'medical_services', emoji:'🩺', category:'Healthcare',
+    description:'Diagnose and treat patients. Respected, stable career. Long but deeply rewarding path in India.',
+    weights:{ bio:0.5, chem:0.3, physics:0.15, english:0.05 },
+    demand:'High', stability:'Very High', growth:'+15%', difficulty:5,
+    colleges:['AIIMS Delhi','JIPMER Puducherry','Madras Medical College','Stanley Medical'],
+    roadmap:[
+      { stage:'Class 12 → Now', color:'#16a34a', text:'Ace PCB. Target NEET UG — aim for 650+/720. Biology & Chemistry are absolutely critical here.' },
+      { stage:'Yrs 1–5 · MBBS', color:'#004ac6', text:'5.5-yr MBBS at government or private medical college. Focus on Anatomy, Physiology, Biochemistry.' },
+      { stage:'Yr 6 · Internship', color:'#004ac6', text:'1-yr rotational internship. Stipend ₹15k–40k/month. Builds clinical confidence and real-world skills.' },
+      { stage:'Yr 7+ · PG / Practice', color:'#fd761a', text:'General practice or NEET PG for MD/MS specialisation. AIIMS/PGI entrance for premier PG seats.' },
+      { stage:'Yrs 12–15 · Specialist', color:'#006058', text:'Specialist doctor. Private practice can cross ₹50L+/yr. Government sector stable at ₹15–25L.' },
+    ],
+    salaryFn(avg){ const m=avg/100; return { entry:+(5+m*4).toFixed(1), mid:+(12+m*8).toFixed(1), senior:+(25+m*15).toFixed(1), lead:+(45+m*30).toFixed(1) }; },
+  },
+  {
+    id:'business_analyst', title:'Business Analyst', icon:'analytics', emoji:'📈', category:'Business',
+    description:'Bridge business and technology. Great entry path from any stream — high demand, moderate competition.',
+    weights:{ math:0.25, economics:0.25, english:0.2, cs:0.15, accounts:0.15 },
+    demand:'High', stability:'Very High', growth:'+21%', difficulty:3,
+    colleges:['IIMs','XLRI Jamshedpur','IIFT','Anna University','Loyola Chennai'],
+    roadmap:[
+      { stage:'Class 12 → Now', color:'#16a34a', text:'Strong Economics & Math scores. Target DU, Loyola, Presidency for BBA or B.Com.' },
+      { stage:'Yrs 1–3 · Undergrad', color:'#004ac6', text:'BBA/B.Com/BCA. Learn Excel, SQL basics, Business Communication. Intern at a startup.' },
+      { stage:'Yrs 3–4 · Certify', color:'#004ac6', text:'Google Data Analytics cert, Power BI/Tableau. Intern at Big 4 (Deloitte, KPMG, EY, PwC).' },
+      { stage:'Yr 5 · Entry Role', color:'#fd761a', text:'Junior BA at TCS, Infosys BPO, Big 4, or a Chennai fintech. Entry easier than pure tech roles.' },
+      { stage:'Yrs 7–10 · Senior', color:'#006058', text:'Senior BA or Product Manager. MBA from IIM accelerates by 2–3 years. Target ₹20–35L.' },
+    ],
+    salaryFn(avg){ const m=avg/100; return { entry:+(4+m*5).toFixed(1), mid:+(10+m*8).toFixed(1), senior:+(18+m*10).toFixed(1), lead:+(28+m*14).toFixed(1) }; },
+  },
+  {
+    id:'ca', title:'Chartered Accountant', icon:'account_balance', emoji:'🧾', category:'Finance',
+    description:'Master of finance, taxation and audit. Highly respected in India with excellent earning potential.',
+    weights:{ accounts:0.4, math:0.3, economics:0.2, english:0.1 },
+    demand:'High', stability:'Very High', growth:'+18%', difficulty:5,
+    colleges:['ICAI (self-study path)','Loyola Chennai','St. Joseph\'s','PSG Coimbatore'],
+    roadmap:[
+      { stage:'Class 12 → Now', color:'#16a34a', text:'Strong Accounts & Math. Register for CA Foundation immediately after Class 12 boards via ICAI.' },
+      { stage:'Yrs 1–2 · Foundation + Inter', color:'#004ac6', text:'CA Foundation → CA Intermediate. Gruelling exams, ~10% pass rate. Professional coaching essential.' },
+      { stage:'Yrs 3–5 · Articleship', color:'#004ac6', text:'3-yr articleship under a registered CA firm. Stipend ₹5k–15k/month. Real tax/audit experience.' },
+      { stage:'Yr 5–6 · CA Final', color:'#fd761a', text:'CA Final exam. On clearing, you\'re a qualified CA. Big 4 and MNCs recruit aggressively from ICAI.' },
+      { stage:'Yrs 8–12 · Senior/Partner', color:'#006058', text:'Senior CA or Tax Partner. Own practice can earn ₹50L+. CFO roles at MNCs actively recruit CAs.' },
+    ],
+    salaryFn(avg){ const m=avg/100; return { entry:+(6+m*6).toFixed(1), mid:+(15+m*10).toFixed(1), senior:+(28+m*12).toFixed(1), lead:+(50+m*20).toFixed(1) }; },
+  },
+  {
+    id:'designer', title:'UX / Product Designer', icon:'design_services', emoji:'🎨', category:'Design',
+    description:'Design apps, websites & digital products. Growing fast with India\'s booming startup scene.',
+    weights:{ art:0.35, english:0.25, cs:0.2, psych:0.2 },
+    demand:'High', stability:'Moderate', growth:'+22%', difficulty:3,
+    colleges:['NID Ahmedabad','IDC IIT Bombay','Srishti Bangalore','Pearl Academy Delhi'],
+    roadmap:[
+      { stage:'Class 12 → Now', color:'#16a34a', text:'Strong English & Art. Target NID/IDC entrance exams or BDes at top design schools.' },
+      { stage:'Yrs 1–3 · Undergrad', color:'#004ac6', text:'BDes or B.Tech + self-learn Figma, Adobe XD. Build portfolio of 5+ real-world design projects.' },
+      { stage:'Yrs 3–4 · Specialise', color:'#004ac6', text:'Intern at a product startup. Focus on UX research, prototyping, and building design systems.' },
+      { stage:'Yr 5 · Entry Role', color:'#fd761a', text:'Junior UX Designer at Freshworks, Zoho, or a startup. Remote roles pay USD-based salaries.' },
+      { stage:'Yrs 7–10 · Senior', color:'#006058', text:'Senior/Lead Designer or Head of Design. Freelance for global clients at ₹5k–15k/hr.' },
+    ],
+    salaryFn(avg){ const m=avg/100; return { entry:+(4+m*5).toFixed(1), mid:+(10+m*8).toFixed(1), senior:+(18+m*12).toFixed(1), lead:+(30+m*15).toFixed(1) }; },
+  },
+  {
+    id:'fintech', title:'FinTech Analyst', icon:'payments', emoji:'💳', category:'Finance + Tech',
+    description:'Finance meets technology. Paytm, PhonePe, Razorpay, HDFC, ICICI all expanding analytics teams.',
+    weights:{ math:0.3, economics:0.25, cs:0.25, accounts:0.1, english:0.1 },
+    demand:'Growing', stability:'High', growth:'+26%', difficulty:3,
+    colleges:['IITs','IIMs','NIT Trichy','BITS Pilani','Christ University Bengaluru'],
+    roadmap:[
+      { stage:'Class 12 → Now', color:'#16a34a', text:'Math + Economics/CS combination. Target BCA, B.Tech CS, or BBA Finance at reputed institutions.' },
+      { stage:'Yrs 1–3 · Undergrad', color:'#004ac6', text:'Learn Python, SQL, Financial Modelling. Understand RBI regulations and the UPI payment ecosystem.' },
+      { stage:'Yrs 3–4 · Intern', color:'#004ac6', text:'Intern at Paytm, PhonePe, BankBazaar, Razorpay or a Chennai NBFC. Massive internship supply.' },
+      { stage:'Yr 5 · Entry Role', color:'#fd761a', text:'Risk Analyst, Product Analyst or Data Analyst at a FinTech. Entry salary competitive with pure tech.' },
+      { stage:'Yrs 7–10 · Senior', color:'#006058', text:'FinTech Product Manager or Risk Lead. CFA certification adds ₹5–10L to your package.' },
+    ],
+    salaryFn(avg){ const m=avg/100; return { entry:+(5+m*6).toFixed(1), mid:+(12+m*9).toFixed(1), senior:+(20+m*12).toFixed(1), lead:+(32+m*16).toFixed(1) }; },
+  },
+  {
+    id:'lawyer', title:'Lawyer / Legal Counsel', icon:'gavel', emoji:'⚖️', category:'Law',
+    description:'Corporate law, IP, or litigation. Top NLU graduates are among India\'s highest-paid professionals.',
+    weights:{ english:0.4, polsci:0.25, history:0.2, economics:0.15 },
+    demand:'Moderate', stability:'High', growth:'+16%', difficulty:4,
+    colleges:['NLSIU Bengaluru','NLU Delhi','Symbiosis Law Pune','Madras Law College'],
+    roadmap:[
+      { stage:'Class 12 → Now', color:'#16a34a', text:'Strong English, History & Political Science. Target CLAT exam for NLU admission — top 5 NLUs are gold.' },
+      { stage:'Yrs 1–5 · LLB / BA LLB', color:'#004ac6', text:'5-yr integrated BA LLB or 3-yr LLB after graduation. Moot courts and internships are critical.' },
+      { stage:'Yrs 5–6 · Internship/Enrol', color:'#004ac6', text:'Intern at a law firm or under a senior advocate. Enrol with the Bar Council.' },
+      { stage:'Yr 6–8 · Junior Lawyer', color:'#fd761a', text:'Junior associate at a corporate law firm or litigation practice in Chennai / Madras HC.' },
+      { stage:'Yrs 10+ · Senior/Partner', color:'#006058', text:'Senior Associate or Partner. Corporate law partners earn ₹50L+. In-house counsel at MNCs.' },
+    ],
+    salaryFn(avg){ const m=avg/100; return { entry:+(3+m*4).toFixed(1), mid:+(8+m*8).toFixed(1), senior:+(18+m*14).toFixed(1), lead:+(35+m*20).toFixed(1) }; },
+  },
+  {
+    id:'content', title:'Content Strategist', icon:'edit_note', emoji:'✍️', category:'Media',
+    description:'Write, strategise, and build brands through content. Growing fast with India\'s digital economy boom.',
+    weights:{ english:0.5, art:0.2, psych:0.15, history:0.15 },
+    demand:'Moderate', stability:'Moderate', growth:'+20%', difficulty:2,
+    colleges:['MICA Ahmedabad','Xavier\'s Mumbai','Manipal Jaipur','Loyola Chennai'],
+    roadmap:[
+      { stage:'Class 12 → Now', color:'#16a34a', text:'Start a blog or YouTube channel now. English excellence is the single biggest differentiator here.' },
+      { stage:'Yrs 1–3 · Undergrad', color:'#004ac6', text:'BA English / Journalism / Mass Communication. Build a portfolio of 20+ published pieces.' },
+      { stage:'Yrs 3–4 · Digital skills', color:'#004ac6', text:'Learn SEO, Google Analytics, social media strategy. Intern at a digital marketing agency.' },
+      { stage:'Yr 5 · Entry Role', color:'#fd761a', text:'Content Strategist or Digital Marketing Exec at startups, agencies, or established media houses.' },
+      { stage:'Yrs 7+ · Senior', color:'#006058', text:'Head of Content or Brand Director. Freelance for global clients. Substack newsletters are huge.' },
+    ],
+    salaryFn(avg){ const m=avg/100; return { entry:+(3+m*3).toFixed(1), mid:+(7+m*6).toFixed(1), senior:+(14+m*8).toFixed(1), lead:+(22+m*12).toFixed(1) }; },
+  },
+];
+
+// ─── APP STATE ────────────────────────────────────────────────
+const state = {
+  step: 1,
+  stream: 'PCM',
+  selectedSubjects: [],
+  marks: {},
+  rankedCareers: [],
+};
+
+const DEFAULT_MARKS = {
+  math:70, physics:70, chem:70, bio:70, cs:70, english:70,
+  economics:70, accounts:70, bst:70, history:70, geography:70,
+  polsci:70, art:70, psych:70,
+};
+
+// ─── STEP NAV ─────────────────────────────────────────────────
+function goStep(n) {
+  document.getElementById(`step-${state.step}`).classList.remove('active');
+  state.step = n;
+  document.getElementById(`step-${state.step}`).classList.add('active');
+  document.getElementById('phone-inner').scrollTop = 0;
+}
+
+function pickOne(el, groupId) {
+  document.querySelectorAll(`#${groupId} .chip-select`).forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ─── SUBJECT PICKER ───────────────────────────────────────────
+function pickStream(el, stream) {
+  state.stream = stream;
+  state.selectedSubjects = [];
+  document.querySelectorAll('#stream-row .chip-select').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  renderSubjectPicker();
+}
+
+function renderSubjectPicker() {
+  const relevant = ALL_SUBJECTS.filter(s => s.streams.includes(state.stream));
+  if (state.selectedSubjects.length === 0) {
+    state.selectedSubjects = relevant.map(s => s.id);
+  }
+  document.getElementById('subj-grid').innerHTML = relevant.map(s => {
+    const sel = state.selectedSubjects.includes(s.id);
+    return `<div class="subj-pick-card ${sel?'sel':''}" onclick="toggleSubject('${s.id}',this)">
+      <span class="sicon">${s.icon}</span>
+      <span class="sname">${s.name}</span>
+      <div class="chk">${sel?'<span class="ms ms-fill" style="color:#fff;font-size:13px">check</span>':''}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleSubject(id, el) {
+  el.classList.toggle('sel');
+  const chk = el.querySelector('.chk');
+  if (el.classList.contains('sel')) {
+    state.selectedSubjects.push(id);
+    chk.innerHTML = '<span class="ms ms-fill" style="color:#fff;font-size:13px">check</span>';
+  } else {
+    state.selectedSubjects = state.selectedSubjects.filter(x => x !== id);
+    chk.innerHTML = '';
+  }
+}
+
+function proceedToMarks() {
+  if (state.selectedSubjects.length < 2) {
+    document.getElementById('subj-err').style.display = 'block';
+    return;
+  }
+  document.getElementById('subj-err').style.display = 'none';
+  state.selectedSubjects.forEach(id => {
+    if (state.marks[id] === undefined) state.marks[id] = DEFAULT_MARKS[id] ?? 70;
+  });
+  renderMarksList();
+  updateAvgBanner();
+  goStep(3);
+}
+
+// ─── MARKS INPUT ──────────────────────────────────────────────
+function renderMarksList() {
+  document.getElementById('marks-list').innerHTML = state.selectedSubjects.map(id => {
+    const s = ALL_SUBJECTS.find(x => x.id === id);
+    const v = state.marks[id] ?? 70;
+    const fc = barColor(v);
+    return `
+    <div class="mark-row" data-id="${id}">
+      <div class="mark-row-top">
+        <span class="sn">${s.icon} ${s.name}</span>
+        <div class="minput-wrap">
+          <input class="minput" type="number" min="0" max="100" value="${v}"
+            oninput="onNumInput('${id}',this)" onblur="onNumBlur('${id}',this)"/>
+          <span style="font-size:12px;color:#737686;font-weight:600">/100</span>
+        </div>
+      </div>
+      <input class="mslider" type="range" min="0" max="100" value="${v}"
+        oninput="onSlider('${id}',this)" style="width:100%"/>
+      <div class="progress-bar" style="margin-top:8px">
+        <div id="mbar-${id}" class="progress-fill ${fc}" style="width:${v}%"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function barColor(v) { return v>=80?'fill-blue':v>=60?'fill-green':v>=40?'fill-orange':'fill-red'; }
+
+function syncRow(id, v) {
+  const row = document.querySelector(`.mark-row[data-id="${id}"]`);
+  if (!row) return;
+  row.querySelector('input[type=number]').value = v;
+  row.querySelector('input[type=range]').value = v;
+  const bar = document.getElementById(`mbar-${id}`);
+  bar.style.width = v+'%';
+  bar.className = 'progress-fill '+barColor(v);
+}
+
+function onNumInput(id, el) {
+  let v = parseInt(el.value);
+  if (isNaN(v)) return;
+  v = Math.max(0, Math.min(100, v));
+  state.marks[id] = v;
+  const row = el.closest('.mark-row');
+  row.querySelector('input[type=range]').value = v;
+  const bar = document.getElementById(`mbar-${id}`);
+  bar.style.width = v+'%'; bar.className = 'progress-fill '+barColor(v);
+  updateAvgBanner();
+}
+function onNumBlur(id, el) {
+  let v = parseInt(el.value);
+  if (isNaN(v)||v<0) v=0; if (v>100) v=100;
+  state.marks[id]=v; syncRow(id,v); updateAvgBanner();
+}
+function onSlider(id, el) {
+  const v = parseInt(el.value);
+  state.marks[id] = v;
+  const row = el.closest('.mark-row');
+  row.querySelector('input[type=number]').value = v;
+  const bar = document.getElementById(`mbar-${id}`);
+  bar.style.width = v+'%'; bar.className = 'progress-fill '+barColor(v);
+  updateAvgBanner();
+}
+
+function updateAvgBanner() {
+  const vals = state.selectedSubjects.map(id => state.marks[id]??0);
+  const avg = vals.length ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : 0;
+  document.getElementById('avg-score').textContent = avg;
+  const grade = document.getElementById('avg-grade');
+  if (avg>=85){grade.textContent='Excellent 🔥';grade.style.background='rgba(22,163,74,0.4)';}
+  else if(avg>=70){grade.textContent='Good ✓';grade.style.background='rgba(255,255,255,0.2)';}
+  else if(avg>=55){grade.textContent='Average';grade.style.background='rgba(253,118,26,0.4)';}
+  else{grade.textContent='Needs Work ⚠';grade.style.background='rgba(239,68,68,0.4)';}
+  return avg;
+}
+
+function resetMarks() {
+  state.selectedSubjects.forEach(id => { state.marks[id] = DEFAULT_MARKS[id]??70; });
+  renderMarksList(); updateAvgBanner();
+  const b = document.getElementById('avg-banner');
+  b.style.transform='scale(1.03)'; setTimeout(()=>b.style.transform='',300);
+}
+
+// ─── CAREER SCORING ENGINE ────────────────────────────────────
+function scoreCareer(career) {
+  let weighted=0, totalW=0;
+  for (const [subj, w] of Object.entries(career.weights)) {
+    if (state.marks[subj] !== undefined) {
+      weighted += (state.marks[subj]/100)*w;
+      totalW += w;
+    }
+  }
+  if (totalW===0) return 0;
+  return Math.min(99, Math.round((weighted/totalW)*100));
+}
+
+function rankCareers() {
+  return CAREERS
+    .map(c => ({...c, match: scoreCareer(c)}))
+    .sort((a,b) => b.match - a.match);
+}
+
+function calcAvg() {
+  const vals = state.selectedSubjects.map(id=>state.marks[id]??0);
+  return vals.length ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : 0;
+}
+
+// ─── GENERATE ─────────────────────────────────────────────────
+function generatePaths() {
+  document.getElementById('gen-btn').style.display='none';
+  document.getElementById('gen-state').style.display='block';
+  const msgs=['Analyzing your marks…','Matching India career data…','Scoring career fit…','Building backup plans…','Done! Launching your map 🚀'];
+  let i=0;
+  const bar=document.getElementById('gen-bar'), msg=document.getElementById('gen-msg');
+  const iv=setInterval(()=>{
+    if(i<msgs.length){msg.textContent=msgs[i];bar.style.width=((i+1)/msgs.length*100)+'%';i++;}
+    else{clearInterval(iv);setTimeout(launchApp,500);}
+  },650);
+}
+
+function launchApp() {
+  state.rankedCareers = rankCareers();
+  buildDashboard();
+  buildPaths();
+  buildBackups();
+  buildMentorChat();
+  document.getElementById('screen-onboard').classList.remove('active');
+  document.getElementById('bottom-nav').style.display='flex';
+  switchTab('dashboard');
+}
+
+// ─── BUILD DASHBOARD ──────────────────────────────────────────
+function buildDashboard() {
+  const top = state.rankedCareers[0];
+  const avg = calcAvg();
+  const sal = top.salaryFn(avg);
+  const backupCount = state.rankedCareers.slice(1,4).length;
+
+  document.getElementById('d-hero-title').innerHTML = `Your Career<br/>Map is Ready`;
+  document.getElementById('d-hero-sub').textContent = `${top.title} is your top match from your ${state.stream} marks — ${avg}% average.`;
+  document.getElementById('d-match-chip').textContent = `${top.match}% AI Match`;
+
+  document.getElementById('d-entry-sal').textContent = `₹${sal.entry}L`;
+  document.getElementById('d-backup-count').textContent = backupCount;
+  document.getElementById('d-avg').textContent = avg+'%';
+
+  // Top card
+  document.getElementById('d-top-card').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+      <div>
+        <div style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:800;color:#0b1c30">${top.title}</div>
+        <div style="font-size:12px;color:#737686;margin-top:3px">${top.description}</div>
+      </div>
+      <div style="background:#eff4ff;padding:10px;border-radius:14px;flex-shrink:0;margin-left:10px">
+        <span class="ms ms-fill" style="color:#004ac6;font-size:24px">${top.icon}</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+      <span class="badge badge-primary">${top.match}% Match</span>
+      <span class="badge badge-green">${top.demand} Demand</span>
+      <span class="badge" style="background:#f0fdf4;color:#16a34a">${state.stream} ✓</span>
+    </div>
+    <div style="display:flex;justify-content:space-between">
+      <div><div style="font-size:11px;font-weight:600;color:#737686">ENTRY SALARY</div><div style="font-family:'Manrope',sans-serif;font-weight:800;color:#0b1c30">₹${sal.entry}–${+(sal.entry*1.4).toFixed(1)}L/yr</div></div>
+      <div><div style="font-size:11px;font-weight:600;color:#737686">5-YR GROWTH</div><div style="font-family:'Manrope',sans-serif;font-weight:800;color:#16a34a">${top.growth}</div></div>
+      <div><div style="font-size:11px;font-weight:600;color:#737686">STABILITY</div><div style="font-family:'Manrope',sans-serif;font-weight:800;color:#004ac6">${top.stability}</div></div>
+    </div>`;
+
+  // Skill bars
+  document.getElementById('d-avg-badge').textContent = `Avg ${avg}`;
+  const barsHtml = state.selectedSubjects.map(id=>{
+    const s=ALL_SUBJECTS.find(x=>x.id===id);
+    const v=state.marks[id]??0;
+    const tc=v>=80?'#004ac6':v>=60?'#006058':'#fd761a';
+    return `<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+        <span style="font-weight:600;font-size:13px;color:#0b1c30">${s.icon} ${s.name}</span>
+        <span style="font-family:'Manrope',sans-serif;font-weight:800;font-size:13px;color:${tc}">${v}%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill ${barColor(v)}" style="width:${v}%"></div></div>
+    </div>`;
+  }).join('');
+  document.getElementById('d-skill-bars').innerHTML = `<div>${barsHtml}</div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1.5px dashed var(--sch);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:12px;font-weight:700;color:#737686;text-transform:uppercase;letter-spacing:0.04em">Overall Average</span>
+      <span style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:900;color:#004ac6">${avg} <span style="font-size:13px;color:#737686;font-weight:600">/ 100</span></span>
+    </div>`;
+
+  // Tip
+  const topSubj = getTopSubject();
+  const tip = avg>=80
+    ? `"Your ${avg}% average is strong — ${top.title} is a realistic goal. Your best subject is ${topSubj.name} at ${topSubj.score}%. Focus on internships from Year 1 of college."`
+    : avg>=65
+    ? `"Your ${avg}% average gives you solid options. ${top.title} is achievable. Strengthen weaker subjects and supplement with online certifications."`
+    : `"Your average of ${avg}% leaves room to grow. A 10-point improvement in ${topSubj.name} (currently ${topSubj.score}%) will significantly expand your career options."`;
+  document.getElementById('d-tip').textContent = tip;
+}
+
+// ─── BUILD PATHS SCREEN ───────────────────────────────────────
+function buildPaths() {
+  const top = state.rankedCareers[0];
+  const backups = state.rankedCareers.slice(1,4);
+  const avg = calcAvg();
+  const sal = top.salaryFn(avg);
+
+  document.getElementById('p-stream-badge').textContent = `${state.stream} • ${getCity()}`;
+  document.getElementById('p-title').textContent = top.title;
+  document.getElementById('p-desc').textContent = top.description;
+  document.getElementById('p-match').textContent = `${top.match}% AI Match`;
+  document.getElementById('p-sal-range').textContent = `₹${sal.entry}–${sal.lead}L range`;
+  document.getElementById('p-avg-label').textContent = `${avg}%`;
+
+  // Salary chart
+  const maxSal = sal.lead;
+  const bars = [
+    {label:'Entry (0–1yr)', val:sal.entry},
+    {label:'Mid (3–4yr)',   val:sal.mid},
+    {label:'Senior (6–8)', val:sal.senior},
+    {label:'Lead (10+yr)', val:sal.lead},
+  ];
+  const colors = ['#2563eb','#2563eb','#fd761a','#9d4300'];
+  document.getElementById('p-salary-chart').innerHTML = bars.map((b,i)=>{
+    const pct = Math.round((b.val/maxSal)*100);
+    return `<div class="sal-row">
+      <div class="sal-label">${b.label}</div>
+      <div class="sal-track">
+        <div class="sal-fill" style="width:${pct}%;background:linear-gradient(90deg,${colors[i]},${colors[i]}cc)">
+          <span style="color:#fff;font-weight:800;font-size:12px;font-family:'Manrope',sans-serif">₹${b.val}L</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Roadmap
+  document.getElementById('p-roadmap').innerHTML = '<div class="path-timeline">' +
+    top.roadmap.map((step,i)=>{
+      const last = i===top.roadmap.length-1;
+      return `<div class="path-step">
+        <div class="pdot-col">
+          <div class="pdot" style="background:${step.color};${(i===0||last)?'width:12px;height:12px':''}"></div>
+          ${!last?`<div class="pline" style="background:${step.color}33"></div>`:''}
+        </div>
+        <div style="flex:1">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:${step.color};text-transform:uppercase">${step.stage}</div>
+          <div class="body-sm" style="margin-top:4px">${step.text}</div>
+        </div>
+      </div>`;
+    }).join('') + '</div>';
+
+  // Backup plans
+  document.getElementById('p-backups').innerHTML = backups.map((c,i)=>{
+    const cs = c.salaryFn(avg);
+    const overlap = Math.min(99, Math.round(c.match*0.9+5));
+    return `<div class="career-card backup slide-in" style="animation-delay:${i*0.1}s">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#fd761a;margin-bottom:4px">BACKUP ${String.fromCharCode(65+i)} · ${overlap}% SKILL OVERLAP</div>
+          <div style="font-family:'Manrope',sans-serif;font-size:17px;font-weight:800;color:#0b1c30">${c.title}</div>
+          <div style="font-size:12px;color:#737686;margin-top:2px">${c.description}</div>
+        </div>
+        <div style="background:#fff3ec;padding:10px;border-radius:14px;margin-left:10px;flex-shrink:0">
+          <span class="ms ms-fill" style="color:#fd761a;font-size:22px">${c.icon}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <span class="badge badge-orange">${c.demand} Demand</span>
+        <span class="badge" style="background:#fff3ec;color:#9d4300">₹${cs.entry}–${cs.senior}L</span>
+        <span class="badge badge-primary">${c.match}% match</span>
+      </div>
+      <div class="body-sm">${c.category} · ${c.growth} 5-yr growth · Entry easier than ${top.title}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── BUILD BACKUPS SCREEN ─────────────────────────────────────
+function buildBackups() {
+  const top = state.rankedCareers[0];
+  const backups = state.rankedCareers.slice(1,4);
+  const avg = calcAvg();
+
+  document.getElementById('b-hero-sub').textContent = `${backups.length} strong alternatives from your ${state.stream} mark profile.`;
+  document.getElementById('b-primary-chip').textContent = `PRIMARY: ${top.title.toUpperCase()}`;
+
+  // Pivot analysis
+  document.getElementById('b-pivot').innerHTML = backups.map(c=>{
+    const overlap = Math.min(99, Math.round(c.match*0.9+5));
+    const diffColor = c.difficulty>=5?'#dc2626':c.difficulty>=4?'#fd761a':'#004ac6';
+    const diffLabel = c.difficulty>=5?'Very High':c.difficulty>=4?'High':c.difficulty>=3?'Moderate':'Low';
+    const diffPct = c.difficulty/5*100;
+    const ovClass = overlap>=80?'color:#15803d;background:#dcfce7':'color:#004ac6;background:#dbe1ff';
+    return `<div class="card" style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <div style="width:44px;height:44px;background:var(--sclo);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span style="font-size:24px">${c.emoji}</span>
+        </div>
+        <div>
+          <div style="font-family:'Manrope',sans-serif;font-size:17px;font-weight:800;color:#0b1c30">${c.title}</div>
+          <span style="padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;display:inline-block;${ovClass}">${overlap}% SKILL OVERLAP</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:20px">
+        <div style="flex:1">
+          <div class="label-sm">DIFFICULTY</div>
+          <div style="font-size:13px;font-weight:700;color:${diffColor};margin-top:3px">${diffLabel}</div>
+          <div class="progress-bar" style="margin-top:6px"><div class="progress-fill" style="width:${diffPct}%;background:linear-gradient(90deg,${diffColor}99,${diffColor})"></div></div>
+        </div>
+        <div style="flex:1">
+          <div class="label-sm">STABILITY</div>
+          <div style="font-size:13px;font-weight:700;color:#9d4300;margin-top:3px">${c.stability}</div>
+          <div class="progress-bar" style="margin-top:6px"><div class="progress-fill fill-orange" style="width:${c.stability==='Very High'?90:c.stability==='High'?70:50}%"></div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Growth text
+  const ts = getTopSubject();
+  document.getElementById('b-growth-text').innerHTML = `Your strength in <strong>${ts.name}</strong> (${ts.score}%) is your career currency. These alternatives all leverage the same core skills — you're not settling, you're diversifying.`;
+
+  // Mentor tip
+  document.getElementById('b-mentor-tip').textContent = backups[0]
+    ? `"${backups[0].title} often leads to faster senior roles than ${top.title} due to lower competition at entry level. Your current marks give a ${backups[0].match}% fit — strong enough to pursue seriously."`
+    : '';
+
+  // Forecast table
+  const all = [top, ...backups];
+  document.getElementById('b-table').innerHTML = `
+    <thead><tr><th>CAREER PATH</th><th>GROWTH</th><th>DIFFICULTY</th></tr></thead>
+    <tbody>${all.map((c,i)=>{
+      const stars = Array.from({length:5},(_,j)=>`<span class="star ${j<c.difficulty?'on':''}">★</span>`).join('');
+      const badge = i===0?'<span class="badge badge-primary" style="font-size:9px">PRIMARY</span>':`<span class="badge badge-orange" style="font-size:9px">BACKUP ${String.fromCharCode(64+i)}</span>`;
+      return `<tr>
+        <td><div style="font-weight:700;font-size:13px;color:#0b1c30">${c.title}</div>${badge}</td>
+        <td><span style="font-family:'Manrope',sans-serif;font-weight:800;color:#16a34a">${c.growth}</span></td>
+        <td><div class="star-row">${stars}</div></td>
+      </tr>`;
+    }).join('')}</tbody>`;
+}
+
+// ─── MENTOR CHAT ──────────────────────────────────────────────
+const API_URL = 'https://api.anthropic.com/v1/messages';
+let chatHistory = [];
+
+function buildMentorChat() {
+  chatHistory = [];
+  const top = state.rankedCareers[0];
+  const avg = calcAvg();
+  const markSummary = state.selectedSubjects.map(id=>{
+    const s = ALL_SUBJECTS.find(x=>x.id===id);
+    return `${s.name}: ${state.marks[id]}`;
+  }).join(', ');
+
+  window._sysPrompt = `You are an expert AI Career Mentor for Indian students.
+
+Student profile:
+- Name: Sid
+- Stream: ${state.stream}, City: ${getCity()}
+- Subject marks (out of 100): ${markSummary}
+- Average score: ${avg}%
+- Top career match: ${top.title} (${top.match}% fit based on their actual marks)
+- Backup careers in order: ${state.rankedCareers.slice(1,4).map(c=>`${c.title} (${c.match}%)`).join(', ')}
+
+Your expertise: Indian education (JEE, NEET, CUET, TNEA), top Indian colleges, India 2025 job market, salaries in ₹LPA, city-specific opportunities.
+
+Rules: Keep replies 3–5 sentences. Be specific to Sid's actual marks and city. Use ₹ for salaries. Mention real companies and colleges. Be encouraging but honest. Use occasional emojis.`;
+
+  const area = document.getElementById('chat-messages');
+  const ts = getTopSubject();
+  area.innerHTML = `
+    <div class="msg msg-ai">👋 Hi Sid! I've analysed your <strong>${state.stream}</strong> marks — you averaged <strong>${avg}%</strong> and your strongest subject is <strong>${ts.name} at ${ts.score}%</strong>.</div>
+    <div class="msg msg-ai">Your top career match is <strong>${top.title} at ${top.match}% fit</strong>. Ask me anything — career paths, colleges, what to study, or how to improve your options!</div>`;
+  document.getElementById('quick-chips').style.display='flex';
+}
+
+async function sendMsg() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value='';
+  appendMsg(text,'user');
+  chatHistory.push({role:'user',content:text});
+  showTyping();
+  try {
+    const res = await fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:window._sysPrompt,messages:chatHistory})
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.content?.[0]?.text || "Sorry, I couldn't connect. Try again!";
+    appendMsg(reply,'ai');
+    chatHistory.push({role:'assistant',content:reply});
+  } catch(e) {
+    removeTyping();
+    appendMsg("Trouble connecting. Check your internet and try again!",'ai');
+  }
+}
+
+function sendQuick(text) {
+  document.getElementById('chat-input').value=text; sendMsg();
+  document.getElementById('quick-chips').style.display='none';
+}
+function appendMsg(text,who) {
+  const area=document.getElementById('chat-messages');
+  const d=document.createElement('div');
+  d.className=`msg msg-${who}`;
+  d.innerHTML=text.replace(/\n/g,'<br/>');
+  area.appendChild(d);
+  d.scrollIntoView({behavior:'smooth',block:'end'});
+}
+function showTyping() {
+  const area=document.getElementById('chat-messages');
+  const d=document.createElement('div');
+  d.className='msg msg-ai msg-typing';d.id='typing-indicator';
+  d.innerHTML='<div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>';
+  area.appendChild(d);d.scrollIntoView({behavior:'smooth'});
+}
+function removeTyping(){const t=document.getElementById('typing-indicator');if(t)t.remove();}
+function clearChat(){buildMentorChat();}
+
+// ─── TAB SWITCHING ────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(`screen-${tab}`).classList.add('active');
+  const nav=document.getElementById(`nav-${tab}`);
+  if(nav) nav.classList.add('active');
+  document.getElementById('phone-inner').scrollTop=0;
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────
+function getCity(){
+  const el=document.querySelector('#city-row .chip-select.sel');
+  return el?el.textContent.trim().replace(/^\S+ /,''):'Chennai';
+}
+function getTopSubject(){
+  let best={id:null,score:0,name:''};
+  state.selectedSubjects.forEach(id=>{
+    const v=state.marks[id]??0;
+    if(v>best.score){best={id,score:v,name:ALL_SUBJECTS.find(x=>x.id===id).name};}
+  });
+  return best;
+}
+
+// ─── INIT ────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded',()=>{
+  state.stream='PCM';
+  state.selectedSubjects=ALL_SUBJECTS.filter(s=>s.streams.includes('PCM')).map(s=>s.id);
+  renderSubjectPicker();
+});
+</script>
+</body>
+</html>
